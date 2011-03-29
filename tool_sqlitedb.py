@@ -1,0 +1,35 @@
+import os
+import sys
+
+import eol_scons
+tools = ['doxygen',]
+env = Environment(tools = ['default'] + tools)
+
+libsources = Split("""
+SQLiteDB.cpp
+""")
+
+headers = Split("""
+SQLiteDB.h
+""")
+
+env.AppendUnique(CPPPATH=['/opt/local/include',]) 
+libsqlitedb = env.Library('sqlitedb', libsources)
+
+html = env.Apidocs(libsources + headers, DOXYFILE_FILE = "Doxyfile")
+
+Default(libsqlitedb)
+
+thisdir = env.Dir('.').srcnode().abspath
+
+def sqlitedb(env):
+    env.AppendUnique(CPPPATH=['/opt/local/include',]) 
+    env.AppendUnique(LIBPATH=['/opt/local/lib',])
+    env.AppendUnique(LIBS=['sqlite3',])
+    env.AppendUnique(CPPPATH   =[thisdir,])
+#    env.AppendLibrary('sqlite3')
+    env.AppendLibrary('sqlitedb')
+    env.AppendDoxref('sqlitedb')
+    env.Require(tools)
+
+Export('sqlitedb')
