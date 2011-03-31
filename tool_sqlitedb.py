@@ -2,7 +2,7 @@ import os
 import sys
 
 import eol_scons
-tools = ['doxygen']
+tools = ['doxygen','prefixoptions']
 env = Environment(tools = ['default'] + tools)
 
 libsources = Split("""
@@ -13,7 +13,6 @@ headers = Split("""
 SQLiteDB.h
 """)
 
-env.AppendUnique(CPPPATH=['/opt/local/include',]) 
 libsqlitedb = env.Library('sqlitedb', libsources)
 
 html = env.Apidocs(libsources + headers,  DOXYFILE_DICT={'PROJECT_NAME':'SQLiteDB', 'PROJECT_NUMBER':'1.0'})
