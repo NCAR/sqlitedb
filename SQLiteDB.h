@@ -52,7 +52,7 @@ protected:
 	/// @throws An error message if it doesn't.
 	/// @param colType The expected sqlite column type (SQLITE_INTEGER, 
 	/// SQLITE_FLOAT, SQLITE_BLOB, SQLITE_TEXT, SQLITE_TEXT3, or SQLITE_NULL)
-	/// @param The column of interest.
+	/// @param col The column of interest.
 	void checkColumn(int colType, int col) throw (std::string);
 	/// Determine the column types of _sqliteStmt and save in _colTypes.
 	/// These are defined in sqlite3.h, and
