@@ -2,7 +2,7 @@ import os
 import sys
 
 import eol_scons
-tools = ['doxygen','prefixoptions']
+tools = ['doxygen']
 env = Environment(tools = ['default'] + tools)
 
 libsources = Split("""
@@ -28,7 +28,7 @@ def sqlitedb(env):
     env.AppendUnique(LIBS   =['sqlite3',])
     env.AppendUnique(CPPPATH=[thisdir,])
     env.AppendLibrary('sqlitedb')
-    #env.AppendDoxref('sqlitedb')
+    env.AppendDoxref('SQLiteDB')
     env.Require(tools)
 
 Export('sqlitedb')
