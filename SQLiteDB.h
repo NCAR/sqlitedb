@@ -1,7 +1,12 @@
 #ifndef SQLITEDB_INC
 #define SQLITEDB_INC
 
+#ifdef SPATIALITE_AMALGAMATION
+#include <spatialite/sqlite3.h>
+#else
 #include <sqlite3.h>
+#endif
+
 #include <string>
 #include <vector>
 #include <map>
@@ -22,6 +27,10 @@ public:
 	/// @param table_name The table of interest
 	/// @return The names of columns in this table
 	std::vector<std::string> column_names(std::string table_name);
+	/// Execute an sql statement.
+	/// @param sql The SQL statement
+	/// @throws A string with an error message if the exec() failes.
+	void exec(std::string sql) throw (std::string);
 	/// Use sqlite3_prepare_v2() to prepare the sql statement 
 	/// for later evaluation via the sqlite3_step() function.
 	/// @param sql The sql statement

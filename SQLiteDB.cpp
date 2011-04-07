@@ -27,10 +27,14 @@ void SQLiteDB::init() {
 			NULL);
 	if (ret != SQLITE_OK) {
 		std::stringstream s;
-		s << "SpatialDB: cannot open " << _dbPath << ", " << sqlite3_errmsg(
-				_dbHandle);
+		s << "SpatialDB: cannot open " << _dbPath << ", "
+			<< sqlite3_errmsg(_dbHandle);
 		throw(s.str());
 	}
+	std::cout << "_dbHandle " << _dbHandle << std::endl;
+
+	//sqlite3_enable_load_extension(_dbHandle, 1);
+
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -81,11 +85,25 @@ std::vector<std::string> SQLiteDB::column_names(std::string table_name) {
 }
 
 ////////////////////////////////////////////////////////////////////
+void SQLiteDB::exec(std::string sql)throw (std::string) {
+
+    char *err_msg = NULL;
+    int ret = sqlite3_exec(_dbHandle, sql.c_str(), NULL, NULL, &err_msg);
+
+	if (ret != SQLITE_OK) {
+		std::stringstream s;
+		s << "SpatialDB: prepare failed for sql statement \"" << sql << "\", "
+			<< err_msg;
+		sqlite3_free (err_msg);
+		throw(s.str());
+	}
+}
+
+////////////////////////////////////////////////////////////////////
 void SQLiteDB::prepare(std::string sql) throw (std::string) {
 
 	int ret = sqlite3_prepare_v2(_dbHandle, sql.c_str(), sql.length(),
 			&_sqliteStmt, NULL);
-
 	if (ret != SQLITE_OK) {
 		/* some error occurred */
 		std::stringstream s;
