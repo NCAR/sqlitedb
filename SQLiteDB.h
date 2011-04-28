@@ -6,6 +6,7 @@
 #else
 #include <sqlite3.h>
 #endif
+#include "spatialite.h"
 
 #include <string>
 #include <vector>
