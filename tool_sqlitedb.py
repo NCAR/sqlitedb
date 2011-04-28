@@ -25,8 +25,6 @@ env.Default(libsqlitedb)
 thisdir = env.Dir('.').srcnode().abspath
 
 def sqlitedb(env):
-    env.AppendUnique(CPPPATH=['/opt/local/include',]) 
-    env.AppendUnique(LIBPATH=['/opt/local/lib',])
     env.AppendUnique(CPPPATH=[thisdir,])
     env.AppendLibrary('sqlitedb')
     env.AppendLibrary('spatialite')
