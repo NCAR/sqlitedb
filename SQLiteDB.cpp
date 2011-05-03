@@ -31,9 +31,6 @@ void SQLiteDB::init() {
 			<< sqlite3_errmsg(_dbHandle);
 		throw(s.str());
 	}
-	std::cout << "_dbHandle " << _dbHandle << std::endl;
-
-	//sqlite3_enable_load_extension(_dbHandle, 1);
 
 }
 

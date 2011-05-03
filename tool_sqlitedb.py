@@ -29,9 +29,7 @@ def sqlitedb(env):
     env.AppendLibrary('sqlitedb')
     env.AppendLibrary('spatialite')
     env.AppendUnique(CPPDEFINES=['SPATIALITE_AMALGAMATION',])
-
     env.AppendDoxref('SQLiteDB')
-
     env.Require(tools)
 
 Export('sqlitedb')
