@@ -30,6 +30,7 @@ def sqlitedb(env):
     env.AppendLibrary('spatialite')
     env.AppendUnique(CPPDEFINES=['SPATIALITE_AMALGAMATION',])
     env.AppendDoxref('SQLiteDB')
+    env.Replace(CCFLAGS=['-g','-O2'])
     env.Require(tools)
 
 Export('sqlitedb')
