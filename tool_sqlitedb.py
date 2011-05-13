@@ -1,11 +1,26 @@
+# SQLiteDB scons tool
+#
+# It builds the library for the SQLiteDB C++ class library,
+# and provides CPP and linker specifications for the header 
+# and libraries..
+#
+# Note that it uses the version of sqlite3 which is packaged
+# in the SpatiaLite amalgamation. For that reason, the 
+# SpatiaLite headers and library must be available.
+# Set the SPATIALITEDIR variable in config.py to specify
+# the top level directory (above include/ and lib/)
+# for SpatiaLite, if these are not installed in standard 
+# locations such as /usr/lib or /usr/local/lib.
+
 import os
 import sys
-
 import eol_scons
+
 tools = ['doxygen']
 env = Environment(tools = ['default'] + tools)
 thisdir = env.Dir('.').srcnode().abspath
 
+# define the tool
 def sqlitedb(env):
     options = env.GlobalVariables()
     options.AddVariables(PathVariable('SPATIALITEDIR', 'SpatiaLite installation root.', None))
@@ -22,6 +37,9 @@ def sqlitedb(env):
 
 Export('sqlitedb')
 
+# build the SQLiteDB library
+
+# just call sqlitedb() in rder to get spatialite details
 sqlitedb(env)
 
 libsources = Split("""
