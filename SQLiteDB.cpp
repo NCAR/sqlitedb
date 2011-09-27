@@ -1,8 +1,11 @@
 #include "SQLiteDB.h"
 #include <iostream>
 ////////////////////////////////////////////////////////////////////
-SQLiteDB::SQLiteDB(std::string dbPath, bool delayInit) throw (std::string) :
-	_dbPath(dbPath), _nColumns(0) {
+SQLiteDB::SQLiteDB(std::string dbPath, bool delayInit, int mode) throw (std::string) :
+	_dbPath(dbPath),
+	_nColumns(0),
+	_mode(mode)
+{
 
 	// initialize the sqlite type names vector
 	initTypeNames();
@@ -22,9 +25,10 @@ SQLiteDB::~SQLiteDB() {
 
 ////////////////////////////////////////////////////////////////////
 void SQLiteDB::init() {
-	// open the sqlite database
-	int ret = sqlite3_open_v2(_dbPath.c_str(), &_dbHandle, SQLITE_OPEN_READONLY,
-			NULL);
+	int ret;
+
+	ret = sqlite3_open_v2(_dbPath.c_str(), &_dbHandle, _mode, NULL);
+
 	if (ret != SQLITE_OK) {
 		std::stringstream s;
 		s << "SpatialDB: cannot open " << _dbPath << ", "

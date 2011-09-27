@@ -16,8 +16,17 @@
 class SQLiteDB {
 
 public:
-	SQLiteDB(std::string dbPath, bool delayInit=false) throw (std::string);
+	/// Constructor
+	/// @param dbPath The file path name of the database.
+	/// @param delayInit Delay initializing the database. The user must then
+	/// call the init() function.
+	/// @param mode The database open mode, as defined for the sqlite3_open_v2() call.
+	/// Use SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE to create a new database.
+	SQLiteDB(std::string dbPath, bool delayInit = false, int mode = SQLITE_OPEN_READONLY) throw (std::string);
+	/// Destructor
+	/// The database will be closed
 	virtual ~SQLiteDB();
+	/// Open the database.
 	void init();
 	/// @return A string with version information
 	std::string version();
@@ -30,7 +39,7 @@ public:
 	std::vector<std::string> column_names(std::string table_name);
 	/// Execute an sql statement.
 	/// @param sql The SQL statement
-	/// @throws A string with an error message if the exec() failes.
+	/// @throws A string with an error message if the exec() fails.
 	void exec(std::string sql) throw (std::string);
 	/// Use sqlite3_prepare_v2() to prepare the sql statement 
 	/// for later evaluation via the sqlite3_step() function.
@@ -88,6 +97,8 @@ protected:
 	std::vector<int> _colTypes; 
 	/// The names of the sqlite types.
 	std::map<int,std::string> _sqliteTypeNames;
+	/// The sqlite3_open_v2() open mode.
+	int _mode;
 
 };
 
