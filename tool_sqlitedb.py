@@ -54,8 +54,6 @@ libsqlitedb = env.Library('sqlitedb', libsources)
 env.Default(libsqlitedb)
 
 html = env.Apidocs(libsources + headers,  DOXYFILE_DICT={'PROJECT_NAME':'SQLiteDB', 'PROJECT_NUMBER':'1.0'})
-env.AppendDoxref('SQLiteDB')
-env.Default(html)
 
 
 
