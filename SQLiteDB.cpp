@@ -3,8 +3,11 @@
 ////////////////////////////////////////////////////////////////////
 SQLiteDB::SQLiteDB(std::string dbPath, bool delayInit, int mode) throw (std::string) :
 	_dbPath(dbPath),
+	_dbHandle(0),
+	_sqliteStmt(0),
 	_nColumns(0),
-	_mode(mode)
+	_mode(mode),
+	_trace(false)
 {
 
 	// initialize the sqlite type names vector
@@ -19,6 +22,11 @@ SQLiteDB::SQLiteDB(std::string dbPath, bool delayInit, int mode) throw (std::str
 
 ////////////////////////////////////////////////////////////////////
 SQLiteDB::~SQLiteDB() {
+
+	// finalize the previously prepared statement
+	finalize();
+
+	// close the database
 	sqlite3_close(_dbHandle);
 }
 
@@ -35,6 +43,9 @@ void SQLiteDB::init() {
 			<< sqlite3_errmsg(_dbHandle);
 		throw(s.str());
 	}
+
+	// enable foreign keys
+	exec("pragma foreign_keys=on;");
 
 }
 
@@ -88,6 +99,10 @@ std::vector<std::string> SQLiteDB::column_names(std::string table_name) {
 ////////////////////////////////////////////////////////////////////
 void SQLiteDB::exec(std::string sql)throw (std::string) {
 
+	if (_trace) {
+		std::cout << "exec: " << sql << std::endl;
+	}
+
     char *err_msg = NULL;
     int ret = sqlite3_exec(_dbHandle, sql.c_str(), NULL, NULL, &err_msg);
 
@@ -103,17 +118,28 @@ void SQLiteDB::exec(std::string sql)throw (std::string) {
 ////////////////////////////////////////////////////////////////////
 void SQLiteDB::prepare(std::string sql) throw (std::string) {
 
+	if (_trace) {
+		std::cout << "prepare: " << sql << std::endl;
+	}
+
+	// finalize the previously prepared statement
+	finalize();
+
 	int ret = sqlite3_prepare_v2(_dbHandle, sql.c_str(), sql.length(),
 			&_sqliteStmt, NULL);
 	if (ret != SQLITE_OK) {
 		/* some error occurred */
 		std::stringstream s;
-		s << "SpatialDB: prepare failed for sql statement \"" << sql << "\", "
+		s << "SpatialDB: prepare failed for sql statement:" << std::endl << sql << std::endl
 				<< sqlite3_errmsg(_dbHandle);
 		throw(s.str());
 	}
 
+	// find out how many columns our query will return
 	_nColumns = sqlite3_column_count(_sqliteStmt);
+
+	// and find out the column types
+	determineColumnTypes();
 
 	// initialize the types so that they are determined after the first step
 	_colTypes.resize(0);
@@ -186,7 +212,10 @@ const void* SQLiteDB::Blob(int col, int& blobSize) throw (std::string) {
 
 ////////////////////////////////////////////////////////////////////
 void SQLiteDB::finalize() {
-	sqlite3_finalize(_sqliteStmt);
+	if (_sqliteStmt) {
+		sqlite3_finalize(_sqliteStmt);
+		_sqliteStmt = 0;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -199,7 +228,8 @@ void SQLiteDB::checkColumn(int colType, int col) throw (std::string) {
 				_sqliteTypeNames[colType] <<
 				") does not match actual column data type (" <<
 				_sqliteTypeNames[_colTypes[col]] <<
-				") for column " << col << " in query ";
+				") for column " << col << " in query: " << std::endl
+				<< sqlite3_sql(_sqliteStmt);
 		throw(s.str());
 	}
 
@@ -233,4 +263,8 @@ SQLiteDB::initTypeNames() {
 }
 
 ////////////////////////////////////////////////////////////////////
+void
+SQLiteDB::trace(bool on) {
+	_trace = on;
+}
 ////////////////////////////////////////////////////////////////////

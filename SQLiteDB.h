@@ -13,6 +13,9 @@
 #include <map>
 #include <sstream>
 
+/// Note that the "pragma foreign_keys=on;" sql statment is executed
+/// when the database is opened, so that foreign key cascade actions
+/// are honored.
 class SQLiteDB {
 
 public:
@@ -63,8 +66,8 @@ public:
 	/// @param blobSize The blob size is returned here.
 	/// @return A pointer to a blob.
 	const void* Blob(int col, int& blobSize) throw (std::string);
-	/// finish using (finalize) the sqlite prepared statement.
-	void finalize();
+	/// Enable and disable query tracing, where the sql queries are printed to stdout.
+	void trace(bool on);
 
 protected:
 	/// Make sure that the requested column exists.
@@ -81,6 +84,11 @@ protected:
 	void determineColumnTypes();
 	/// Initialize the map containing the sqlite type names.
 	void initTypeNames();
+	/// This function is called to finalize the current prepared
+	/// sqlite statement, identified by _sqliteStmt. If statements
+	/// are not finalized, resource leaks may occur. _sqliteStmt
+	/// will be set to null.
+	void finalize();
 	
 	/// Path to the spatialite database.
 	std::string _dbPath;
@@ -99,6 +107,8 @@ protected:
 	std::map<int,std::string> _sqliteTypeNames;
 	/// The sqlite3_open_v2() open mode.
 	int _mode;
+	/// Set true to enable query tracing.
+	bool _trace;
 
 };
 
