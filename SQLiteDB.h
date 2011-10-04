@@ -40,10 +40,18 @@ public:
 	/// @param table_name The table of interest
 	/// @return The names of columns in this table
 	std::vector<std::string> column_names(std::string table_name);
+	/// @param col The column number (0 based)
+	/// @return The column type: SQLITE_INTEGER, SQLITE_FLOAT, SQLITE_BLOB, SQLITE_TEXT,
+	/// SQLITE_TEXT3, or SQLITE_NULL
+	int colType(int col);
 	/// Execute an sql statement.
 	/// @param sql The SQL statement
 	/// @throws A string with an error message if the exec() fails.
 	void exec(std::string sql) throw (std::string);
+	/// Execute an sql statement.
+	/// @param sql The SQL statement
+	/// @throws A string with an error message if the exec() fails.
+	void exec(std::stringstream& sql) throw (std::string);
 	/// Use sqlite3_prepare_v2() to prepare the sql statement 
 	/// for later evaluation via the sqlite3_step() function.
 	/// @param sql The sql statement

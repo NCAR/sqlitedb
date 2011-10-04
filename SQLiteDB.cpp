@@ -116,6 +116,11 @@ void SQLiteDB::exec(std::string sql)throw (std::string) {
 }
 
 ////////////////////////////////////////////////////////////////////
+void SQLiteDB::exec(std::stringstream& sql)throw (std::string) {
+	exec(sql.str());
+}
+
+////////////////////////////////////////////////////////////////////
 void SQLiteDB::prepare(std::string sql) throw (std::string) {
 
 	if (_trace) {
@@ -138,26 +143,18 @@ void SQLiteDB::prepare(std::string sql) throw (std::string) {
 	// find out how many columns our query will return
 	_nColumns = sqlite3_column_count(_sqliteStmt);
 
-	// and find out the column types
-	determineColumnTypes();
-
-	// initialize the types so that they are determined after the first step
-	_colTypes.resize(0);
-
-
 }
 
 ////////////////////////////////////////////////////////////////////
 bool SQLiteDB::step() {
+
 	int ret = sqlite3_step(_sqliteStmt);
 
-	// determine the column types, to be used later in
-	// verifying data requests. This must be done after the first step()
-	if (_colTypes.size() == 0) {
-		determineColumnTypes();
-	}
-
 	if (ret == SQLITE_ROW) {
+		// determine the column types, to be used later in
+		// verifying data requests. This must be done after the first step()
+		determineColumnTypes();
+
 		return true;
 	}
 
@@ -219,7 +216,26 @@ void SQLiteDB::finalize() {
 }
 
 ////////////////////////////////////////////////////////////////////
+int SQLiteDB::colType(int col) {
+	if (col < 0 || col > _nColumns) {
+		std::stringstream s;
+		s << "SpatialDB: requested column " << col << " is larger than the "
+				<< _nColumns << " available columns";
+		throw(s.str());
+	}
+
+	return _colTypes[col];
+}
+
+////////////////////////////////////////////////////////////////////
 void SQLiteDB::checkColumn(int colType, int col) throw (std::string) {
+
+	if (col < 0 || col > _nColumns) {
+		std::stringstream s;
+		s << "SpatialDB: requested column " << col << " is larger than the "
+				<< _nColumns << " available columns";
+		throw(s.str());
+	}
 
 	if (colType != _colTypes[col]) {
 		std::stringstream s;
@@ -233,12 +249,6 @@ void SQLiteDB::checkColumn(int colType, int col) throw (std::string) {
 		throw(s.str());
 	}
 
-	if (col < 0 || col > _nColumns) {
-		std::stringstream s;
-		s << "SpatialDB: requested column " << col << " is larger than the "
-				<< _nColumns << " available columns";
-		throw(s.str());
-	}
 
 	return;
 }
