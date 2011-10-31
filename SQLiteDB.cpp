@@ -50,6 +50,11 @@ void SQLiteDB::init() {
 }
 
 ////////////////////////////////////////////////////////////////////
+std::string SQLiteDB::dbPath() {
+	return _dbPath;
+}
+
+////////////////////////////////////////////////////////////////////
 std::string SQLiteDB::version() {
 	std::stringstream s;
 	s << "SQLite version: " << sqlite3_libversion();

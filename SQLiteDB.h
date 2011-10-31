@@ -76,6 +76,8 @@ public:
 	const void* Blob(int col, int& blobSize) throw (std::string);
 	/// Enable and disable query tracing, where the sql queries are printed to stdout.
 	void trace(bool on);
+	/// @return The path to the database file
+	std::string dbPath();
 
 protected:
 	/// Make sure that the requested column exists.
