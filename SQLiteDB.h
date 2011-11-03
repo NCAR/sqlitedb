@@ -31,7 +31,9 @@ public:
 	virtual ~SQLiteDB();
 	/// Open the database.
 	void init();
-	/// @return A string with version information
+	/// @return The pragma user_version
+	int user_version();
+	/// @return A string with SQLite version information
 	std::string version();
 	/// Get the table names.
 	/// @return The table names.

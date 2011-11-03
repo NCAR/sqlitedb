@@ -63,6 +63,24 @@ std::string SQLiteDB::version() {
 }
 
 ////////////////////////////////////////////////////////////////////
+int SQLiteDB::user_version() {
+
+	int version;
+
+	// prepare the query
+	prepare("pragma user_version;");
+
+	if (step()) {
+		version = Integer(0);
+	}
+
+	// finish the query
+	finalize();
+
+	return version;
+}
+
+////////////////////////////////////////////////////////////////////
 std::vector<std::string> SQLiteDB::table_names() {
 
 	std::vector<std::string> result;
