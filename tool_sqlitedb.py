@@ -31,7 +31,10 @@ def sqlitedb(env):
         env.AppendUnique(LIBPATH=[env['SPATIALITEDIR']+'/lib',])
     env.AppendLibrary('sqlitedb')
     env.AppendLibrary('spatialite')
-    env.AppendUnique(CPPDEFINES=['SPATIALITE_AMALGAMATION',])
+    if env['PLATFORM'] != 'win32':
+    	env.AppendUnique(CPPDEFINES=['SPATIALITE_AMALGAMATION',])
+    if env['PLATFORM'] == 'win32':
+    	env.AppendLibrary('sqlite3')
     env.Require(tools)
 
 Export('sqlitedb')
