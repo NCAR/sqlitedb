@@ -30,7 +30,6 @@ SQLiteDB::~SQLiteDB() {
 	sqlite3_close(_dbHandle);
 }
 
-
 ////////////////////////////////////////////////////////////////////
 void SQLiteDB::init() {
 	int ret;
@@ -39,14 +38,13 @@ void SQLiteDB::init() {
 
 	if (ret != SQLITE_OK) {
 		std::stringstream s;
-		s << "SpatialDB: cannot open " << _dbPath << ", "
+		s << "SQLiteDB: cannot open " << _dbPath << ", "
 			<< sqlite3_errmsg(_dbHandle);
 		throw(s.str());
 	}
 
 	// enable foreign keys
 	exec("pragma foreign_keys=on;");
-
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -102,7 +100,6 @@ std::vector<std::string> SQLiteDB::table_names() {
 	return result;
 }
 
-
 ////////////////////////////////////////////////////////////////////
 std::vector<std::string> SQLiteDB::column_names(std::string table_name) {
 
@@ -131,7 +128,7 @@ void SQLiteDB::exec(std::string sql)throw (std::string) {
 
 	if (ret != SQLITE_OK) {
 		std::stringstream s;
-		s << "SpatialDB: prepare failed for sql statement \"" << sql << "\", "
+		s << "SQLiteDB: prepare failed for sql statement \"" << sql << "\", "
 			<< err_msg;
 		sqlite3_free (err_msg);
 		throw(s.str());
@@ -158,14 +155,13 @@ void SQLiteDB::prepare(std::string sql) throw (std::string) {
 	if (ret != SQLITE_OK) {
 		/* some error occurred */
 		std::stringstream s;
-		s << "SpatialDB: prepare failed for sql statement:" << std::endl << sql << std::endl
+		s << "SQLiteDB: prepare failed for sql statement:" << std::endl << sql << std::endl
 				<< sqlite3_errmsg(_dbHandle);
 		throw(s.str());
 	}
 
 	// find out how many columns our query will return
 	_nColumns = sqlite3_column_count(_sqliteStmt);
-
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -242,7 +238,7 @@ void SQLiteDB::finalize() {
 int SQLiteDB::colType(int col) {
 	if (col < 0 || col > _nColumns) {
 		std::stringstream s;
-		s << "SpatialDB: requested column " << col << " is larger than the "
+		s << "SQLiteDB: requested column " << col << " is larger than the "
 				<< _nColumns << " available columns";
 		throw(s.str());
 	}
@@ -255,7 +251,7 @@ void SQLiteDB::checkColumn(int colType, int col) throw (std::string) {
 
 	if (col < 0 || col > _nColumns) {
 		std::stringstream s;
-		s << "SpatialDB: requested column " << col << " is larger than the "
+		s << "SQLiteDB: requested column " << col << " is larger than the "
 				<< _nColumns << " available columns";
 		throw(s.str());
 	}
@@ -263,7 +259,7 @@ void SQLiteDB::checkColumn(int colType, int col) throw (std::string) {
 	if (colType != _colTypes[col]) {
 		std::stringstream s;
 		/// @todo add the query to the error message
-		s << "SpatialDB: Requested data type (" <<
+		s << "SQLiteDB: Requested data type (" <<
 				_sqliteTypeNames[colType] <<
 				") does not match actual column data type (" <<
 				_sqliteTypeNames[_colTypes[col]] <<
@@ -271,7 +267,6 @@ void SQLiteDB::checkColumn(int colType, int col) throw (std::string) {
 				<< sqlite3_sql(_sqliteStmt);
 		throw(s.str());
 	}
-
 
 	return;
 }
@@ -286,8 +281,7 @@ void SQLiteDB::determineColumnTypes() {
 }
 
 ////////////////////////////////////////////////////////////////////
-void
-SQLiteDB::initTypeNames() {
+void SQLiteDB::initTypeNames() {
 	_sqliteTypeNames[SQLITE_TEXT]    = std::string("SQLITE_TEXT");
 	_sqliteTypeNames[SQLITE_FLOAT]   = std::string("SQLITE_FLOAT");
 	_sqliteTypeNames[SQLITE_BLOB]    = std::string("SQLITE_BLOB");
@@ -296,8 +290,6 @@ SQLiteDB::initTypeNames() {
 }
 
 ////////////////////////////////////////////////////////////////////
-void
-SQLiteDB::trace(bool on) {
+void SQLiteDB::trace(bool on) {
 	_trace = on;
 }
-////////////////////////////////////////////////////////////////////
