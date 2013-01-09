@@ -26,22 +26,22 @@ def sqlitedb(env):
     options.AddVariables(PathVariable('SPATIALITEDIR', 'SpatiaLite installation root.', None))
     options.Update(env)
     env.AppendUnique(CPPPATH=[thisdir,])
+    env.Append(LIBPATH=[thisdir,])
     if env.has_key('SPATIALITEDIR'):
         env.AppendUnique(CPPPATH=[env['SPATIALITEDIR']+'/include',])
         env.AppendUnique(LIBPATH=[env['SPATIALITEDIR']+'/lib',])
-    env.AppendLibrary('sqlitedb')
-    env.AppendLibrary('spatialite')
+    env.Append(LIBS = ['sqlitedb', 'spatialite'] )
     if env['PLATFORM'] != 'win32':
     	env.AppendUnique(CPPDEFINES=['SPATIALITE_AMALGAMATION',])
     if env['PLATFORM'] == 'win32':
-    	env.AppendLibrary('sqlite3')
+    	env.Append(LIBS = ['sqlite3',])
     env.Require(tools)
 
 Export('sqlitedb')
 
 # build the SQLiteDB library
 
-# just call sqlitedb() in rder to get spatialite details
+# just call sqlitedb() in order to get spatialite details
 sqlitedb(env)
 
 libsources = Split("""
