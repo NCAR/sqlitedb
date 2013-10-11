@@ -14,7 +14,6 @@
 
 import os
 import sys
-import eol_scons
 
 tools = ['doxygen']
 env = Environment(tools = ['default'] + tools)
