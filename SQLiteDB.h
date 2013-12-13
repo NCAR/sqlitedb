@@ -1,11 +1,7 @@
 #ifndef SQLITEDB_INC
 #define SQLITEDB_INC
 
-#ifdef SPATIALITE_AMALGAMATION
-#include <spatialite/sqlite3.h>
-#else
 #include <sqlite3.h>
-#endif
 #include "spatialite.h"
 
 #include <string>
