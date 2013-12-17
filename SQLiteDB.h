@@ -97,6 +97,8 @@ protected:
 	/// are not finalized, resource leaks may occur. _sqliteStmt
 	/// will be set to null.
 	void finalize();
+	/// @return the database handle
+	sqlite3* handle();
 	
 	/// Path to the spatialite database.
 	std::string _dbPath;
