@@ -21,15 +21,9 @@ thisdir = env.Dir('.').srcnode().abspath
 
 # define the tool
 def sqlitedb(env):
-    options = env.GlobalVariables()
-    options.AddVariables(PathVariable('SPATIALITEDIR', 'SpatiaLite installation root.', None))
-    options.Update(env)
     env.AppendUnique(CPPPATH=[thisdir,])
     env.Append(LIBPATH=[thisdir,])
-    if env.has_key('SPATIALITEDIR'):
-        env.AppendUnique(CPPPATH=[env['SPATIALITEDIR']+'/include',])
-        env.AppendUnique(LIBPATH=[env['SPATIALITEDIR']+'/lib',])
-    env.Append(LIBS = ['sqlitedb', 'spatialite', 'sqlite3'] )
+    env.Append(LIBS = ['sqlitedb', 'sqlite3'] )
     env.Require(tools)
 
 Export('sqlitedb')
