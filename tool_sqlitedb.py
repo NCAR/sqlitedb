@@ -15,7 +15,7 @@
 import os
 import sys
 
-tools = ['doxygen']
+tools = ['doxygen', 'prefixoptions']
 env = Environment(tools = ['default'] + tools)
 thisdir = env.Dir('.').srcnode().abspath
 
