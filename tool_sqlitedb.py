@@ -24,6 +24,10 @@ def sqlitedb(env):
     env.AppendUnique(CPPPATH=[thisdir,])
     env.Append(LIBPATH=[thisdir,])
     env.Append(LIBS = ['sqlitedb', 'sqlite3'] )
+    if sys.platform == 'darwin':
+        # use the homebrew supplied sqlite on osx.
+        env.AppendUnique(LIBPATH=['/usr/local/opt/sqlite/lib',])
+        env.AppendUnique(CPPPATH=['/usr/local/opt/sqlite/include',])
     env.Require(tools)
 
 Export('sqlitedb')
