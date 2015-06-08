@@ -39,10 +39,12 @@ sqlitedb(env)
 
 libsources = Split("""
 SQLiteDB.cpp
+SQLSchema.cpp
 """)
 
 headers = Split("""
 SQLiteDB.h
+SQLSchema.h
 """)
 
 libsqlitedb = env.Library('sqlitedb', libsources)
