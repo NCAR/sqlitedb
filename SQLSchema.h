@@ -18,8 +18,8 @@ class SQLSchema {
 public:
 	/// Constructor. Read the schema, either from a file or from a string.
 	/// @param schemaOrPath The schema, or the path to a schema.
-	/// @param isFilePath isFilePath If true, schemaOrPath is a file path.
-	/// If false, it is the path.
+	/// @param isFilePath If true, schemaOrPath is a file path.
+	/// If false, schemaOrPath is the schema.
 	SQLSchema(std::string schemaOrPath, bool isFilePath=true);
 
 	/// Destructor
