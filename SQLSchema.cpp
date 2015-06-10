@@ -4,19 +4,22 @@
  *  Created on: Nov 3, 2011
  *      Author: martinc
  */
+
 #include "SQLSchema.h"
-#include <QtCore/QtCore>
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <vector>
+#include <boost/regex.hpp>
 
 //////////////////////////////////////////////////////////////////////////////
 SQLSchema::SQLSchema(std::string schemaOrPath, bool isFilePath) {
 
 	if (isFilePath) {
-		QFile dbSchemaFile(schemaOrPath.c_str());
-		dbSchemaFile.open(QFile::ReadOnly);
-		_schema = QTextStream(&dbSchemaFile).readAll().toStdString();
+		std::ifstream dbSchemaFile(schemaOrPath.c_str());
+		std::string s((std::istreambuf_iterator<char>(dbSchemaFile)),
+				       std::istreambuf_iterator<char>());
+		_schema = s;
 	} else {
 		_schema = schemaOrPath;
 	}
@@ -38,19 +41,15 @@ std::string SQLSchema::schema() {
 bool SQLSchema::user_version(int& user_version) {
 
 	// Regular expression to find  and decode the user_version pragma.
-	// (Hint: the parenthesis identifiy the fields that
-	// will be returned by QRegExp::cap())
-	QRegExp re("pragma\\s+user_version.*([0-9]+).*;", Qt::CaseInsensitive);
-
-	// Use setMinimal to enable non-greedy matching.
-	re.setMinimal(true);
+	// ( Elements enclosed in parenthesis are returned in the results).
+	boost::regex pragma_re(".*pragma.*user_version.*=.*([0-9]+).*");
 
 	// Search for the pragma.
-	if (re.indexIn(QString(_schema.c_str())) != -1) {
-		std::stringstream(re.cap(1).toStdString()) >> user_version;
+	boost::match_results<std::string::const_iterator> results;
+	if (boost::regex_match(_schema, results, pragma_re)) {
+		std::stringstream(results[1]) >> user_version;
 		return true;
 	}
-
 	return false;
 }
 
