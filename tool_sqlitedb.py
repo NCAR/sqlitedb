@@ -28,7 +28,7 @@ def sqlitedb(env):
         # use the homebrew supplied sqlite on osx.
         env.AppendUnique(LIBPATH=['/usr/local/opt/sqlite/lib',])
         env.AppendUnique(CPPPATH=['/usr/local/opt/sqlite/include',])
-    env.Require(['default', 'boost_regex'])
+    env.Require(['boost_regex'])
 
 Export('sqlitedb')
 
