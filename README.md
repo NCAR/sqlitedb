@@ -1,5 +1,5 @@
 # sqlitedb
-C++ wrapper for an sqlite3 database.
+A wrapper for an sqlite3 database.
 
 sqlitedb provides a C++ abstraction for manipulating an SQLite database.
 
