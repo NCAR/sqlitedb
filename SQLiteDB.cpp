@@ -117,7 +117,7 @@ std::vector<std::string> SQLiteDB::column_names(std::string table_name) {
 }
 
 ////////////////////////////////////////////////////////////////////
-void SQLiteDB::exec(std::string sql)throw (std::string) {
+void SQLiteDB::exec(std::string sql) throw (std::string) {
 
 	if (_trace) {
 		std::cout << "exec: " << sql << std::endl;
@@ -128,7 +128,8 @@ void SQLiteDB::exec(std::string sql)throw (std::string) {
 
 	if (ret != SQLITE_OK) {
 		std::stringstream s;
-		s << "SQLiteDB: prepare failed for sql statement \"" << sql << "\", "
+		s << "SQLiteDB: database error for " << dbPath() << std::endl;
+		s << "SQLiteDB: exec failed for sql statement \"" << sql << "\", "
 			<< err_msg;
 		sqlite3_free (err_msg);
 		throw(s.str());
@@ -155,6 +156,7 @@ void SQLiteDB::prepare(std::string sql) throw (std::string) {
 	if (ret != SQLITE_OK) {
 		/* some error occurred */
 		std::stringstream s;
+		s << "SQLiteDB: database error for " << dbPath() << std::endl;
 		s << "SQLiteDB: prepare failed for sql statement:" << std::endl << sql << std::endl
 				<< sqlite3_errmsg(_dbHandle);
 		throw(s.str());
@@ -238,6 +240,7 @@ void SQLiteDB::finalize() {
 int SQLiteDB::colType(int col) {
 	if (col < 0 || col > _nColumns) {
 		std::stringstream s;
+		s << "SQLiteDB: database error for " << dbPath() << std::endl;
 		s << "SQLiteDB: requested column " << col << " is larger than the "
 				<< _nColumns << " available columns";
 		throw(s.str());
@@ -251,6 +254,7 @@ void SQLiteDB::checkColumn(int colType, int col) throw (std::string) {
 
 	if (col < 0 || col > _nColumns) {
 		std::stringstream s;
+		s << "SQLiteDB: database error for " << dbPath() << std::endl;
 		s << "SQLiteDB: requested column " << col << " is larger than the "
 				<< _nColumns << " available columns";
 		throw(s.str());
@@ -259,6 +263,7 @@ void SQLiteDB::checkColumn(int colType, int col) throw (std::string) {
 	if (colType != _colTypes[col]) {
 		std::stringstream s;
 		/// @todo add the query to the error message
+		s << "SQLiteDB: database error for " << dbPath() << std::endl;
 		s << "SQLiteDB: Requested data type (" <<
 				_sqliteTypeNames[colType] <<
 				") does not match actual column data type (" <<
