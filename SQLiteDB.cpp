@@ -7,13 +7,14 @@ SQLiteDB::SQLiteDB(std::string dbPath, bool delayInit, int mode) throw (std::str
 	_sqliteStmt(0),
 	_nColumns(0),
 	_mode(mode),
+	_delayedInit(delayInit),
 	_trace(false)
 {
 
 	// initialize the sqlite type names vector
 	initTypeNames();
 
-	if (delayInit) {
+	if (_delayedInit) {
 		return;
 	}
 
@@ -23,11 +24,10 @@ SQLiteDB::SQLiteDB(std::string dbPath, bool delayInit, int mode) throw (std::str
 ////////////////////////////////////////////////////////////////////
 SQLiteDB::~SQLiteDB() {
 
-	// finalize the previously prepared statement
-	finalize();
+	if (!_delayedInit) {
+		close();
+	}
 
-	// close the database
-	sqlite3_close(_dbHandle);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -45,6 +45,16 @@ void SQLiteDB::init() {
 
 	// enable foreign keys
 	exec("pragma foreign_keys=on;");
+}
+
+////////////////////////////////////////////////////////////////////
+void SQLiteDB::close() {
+
+    // finalize the previously prepared statement
+	finalize();
+
+	// close the database
+	sqlite3_close(_dbHandle);
 }
 
 ////////////////////////////////////////////////////////////////////

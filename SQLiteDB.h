@@ -25,8 +25,12 @@ public:
 	/// Destructor
 	/// The database will be closed
 	virtual ~SQLiteDB();
-	/// Open the database.
+	/// Initialize the database. Must be explicitly called by user if
+	/// delayInit is true.
 	void init();
+	/// Close the database. Must be explicitly called by user if
+	/// delayInit is true.
+	void close();
 	/// @return The pragma user_version
 	int user_version();
 	/// @return A string with SQLite version information
@@ -115,6 +119,9 @@ protected:
 	std::vector<int> _colTypes; 
 	/// The names of the sqlite types.
 	std::map<int,std::string> _sqliteTypeNames;
+	/// The explicit init and close flag. If true, the owner must call init()
+	/// and close() explictly after creation and before destruction.
+	bool _delayedInit;
 	/// The sqlite3_open_v2() open mode.
 	int _mode;
 	/// Set true to enable query tracing.
