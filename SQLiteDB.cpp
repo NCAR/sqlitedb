@@ -1,20 +1,20 @@
 #include "SQLiteDB.h"
 #include <iostream>
 ////////////////////////////////////////////////////////////////////
-SQLiteDB::SQLiteDB(std::string dbPath, bool delayInit, int mode) throw (std::string) :
+SQLiteDB::SQLiteDB(std::string dbPath, bool deferInitAndClose, int mode) throw (std::string) :
 	_dbPath(dbPath),
 	_dbHandle(0),
 	_sqliteStmt(0),
 	_nColumns(0),
 	_mode(mode),
-	_delayedInit(delayInit),
+	_deferInitAndClose(deferInitAndClose),
 	_trace(false)
 {
 
 	// initialize the sqlite type names vector
 	initTypeNames();
 
-	if (_delayedInit) {
+	if (_deferInitAndClose) {
 		return;
 	}
 
@@ -24,7 +24,7 @@ SQLiteDB::SQLiteDB(std::string dbPath, bool delayInit, int mode) throw (std::str
 ////////////////////////////////////////////////////////////////////
 SQLiteDB::~SQLiteDB() {
 
-	if (!_delayedInit) {
+	if (!_deferInitAndClose) {
 		close();
 	}
 
