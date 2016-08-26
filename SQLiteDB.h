@@ -17,19 +17,19 @@ class SQLiteDB {
 public:
 	/// Constructor
 	/// @param dbPath The file path name of the database.
-	/// @param delayInit Delay initializing the database. The user must then
-	/// call the init() function.
+	/// @param deferInitAndClose Defer initializing and closing the database. The user must then
+	/// explicitly call the init() and close() functions.
 	/// @param mode The database open mode, as defined for the sqlite3_open_v2() call.
 	/// Use SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE to create a new database.
-	SQLiteDB(std::string dbPath, bool delayInit = false, int mode = SQLITE_OPEN_READONLY) throw (std::string);
+	SQLiteDB(std::string dbPath, bool deferInitAndClose = false, int mode = SQLITE_OPEN_READONLY) throw (std::string);
 	/// Destructor
 	/// The database will be closed
 	virtual ~SQLiteDB();
 	/// Initialize the database. Must be explicitly called by user if
-	/// delayInit is true.
+	/// deferInitAndClose is true.
 	void init();
 	/// Close the database. Must be explicitly called by user if
-	/// delayInit is true.
+	/// deferInitAndClose is true.
 	void close();
 	/// @return The pragma user_version
 	int user_version();
@@ -121,7 +121,7 @@ protected:
 	std::map<int,std::string> _sqliteTypeNames;
 	/// The explicit init and close flag. If true, the owner must call init()
 	/// and close() explictly after creation and before destruction.
-	bool _delayedInit;
+	bool _deferInitAndClose;
 	/// The sqlite3_open_v2() open mode.
 	int _mode;
 	/// Set true to enable query tracing.
