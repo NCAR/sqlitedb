@@ -34,7 +34,7 @@ public:
 	/// @return The pragma user_version
 	int user_version();
 	/// @return A string with SQLite version information
-	std::string version();
+	static std::string version();
 	/// Get the table names.
 	/// @return The table names.
 	std::vector<std::string> table_names();
