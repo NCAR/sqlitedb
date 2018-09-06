@@ -22,7 +22,7 @@ thisdir = env.Dir('.').srcnode().abspath
 # define the tool
 def sqlitedb(env):
     env.AppendUnique(CPPPATH=[thisdir,])
-    env.Append(LIBPATH=[thisdir,])
+    env.AppendUnique(LIBPATH=[thisdir,])
     env.Append(LIBS = ['sqlitedb', 'sqlite3'] )
     if sys.platform == 'darwin':
         # use the homebrew supplied sqlite on osx.
