@@ -8,6 +8,6 @@ sqlitedb provides a C++ abstraction for manipulating an SQLite database.
  * [boost](www.boost.org)
  
 ## Used By
- * [aspen](https://github.com/ncareol/aspen)
- * [spatialdb](https://github.com/ncareol/spatialdb)
+ * [aspen](https://github.com/NCAR/aspen)
+ * [spatialdb](https://github.com/NCAR/spatialdb)
  * [ags](https://github.com/ncareol/ags)
