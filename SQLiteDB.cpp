@@ -6,8 +6,8 @@ SQLiteDB::SQLiteDB(std::string dbPath, bool deferInitAndClose, int mode) throw (
 	_dbHandle(0),
 	_sqliteStmt(0),
 	_nColumns(0),
-	_mode(mode),
 	_deferInitAndClose(deferInitAndClose),
+	_mode(mode),
 	_trace(false)
 {
 
@@ -73,7 +73,7 @@ std::string SQLiteDB::version() {
 ////////////////////////////////////////////////////////////////////
 int SQLiteDB::user_version() {
 
-	int version;
+	int version = -1;
 
 	// prepare the query
 	prepare("pragma user_version;");
@@ -117,7 +117,6 @@ std::vector<std::string> SQLiteDB::column_names(std::string table_name) {
 
 	// prepare the query
 	prepare("Pragma table_info(" + table_name + ")");
-	int n = sqlite3_column_count(_sqliteStmt);
 
 	while (step()) {
 			result.push_back(Text(1));

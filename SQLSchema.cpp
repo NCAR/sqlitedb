@@ -23,8 +23,6 @@ SQLSchema::SQLSchema(std::string schemaOrPath, bool isFilePath) {
 	} else {
 		_schema = schemaOrPath;
 	}
-
-	int v;
 }
 
 //////////////////////////////////////////////////////////////////////////////
