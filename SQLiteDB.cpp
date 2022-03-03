@@ -1,7 +1,7 @@
 #include "SQLiteDB.h"
 #include <iostream>
 ////////////////////////////////////////////////////////////////////
-SQLiteDB::SQLiteDB(std::string dbPath, bool deferInitAndClose, int mode) throw (std::string) :
+SQLiteDB::SQLiteDB(std::string dbPath, bool deferInitAndClose, int mode) :
 	_dbPath(dbPath),
 	_dbHandle(0),
 	_sqliteStmt(0),
@@ -126,7 +126,7 @@ std::vector<std::string> SQLiteDB::column_names(std::string table_name) {
 }
 
 ////////////////////////////////////////////////////////////////////
-void SQLiteDB::exec(std::string sql) throw (std::string) {
+void SQLiteDB::exec(std::string sql) {
 
 	if (_trace) {
 		std::cout << "exec: " << sql << std::endl;
@@ -146,12 +146,12 @@ void SQLiteDB::exec(std::string sql) throw (std::string) {
 }
 
 ////////////////////////////////////////////////////////////////////
-void SQLiteDB::exec(std::stringstream& sql)throw (std::string) {
+void SQLiteDB::exec(std::stringstream& sql) {
 	exec(sql.str());
 }
 
 ////////////////////////////////////////////////////////////////////
-void SQLiteDB::prepare(std::string sql) throw (std::string) {
+void SQLiteDB::prepare(std::string sql) {
 
 	if (_trace) {
 		std::cout << "prepare: " << sql << std::endl;
@@ -192,7 +192,7 @@ bool SQLiteDB::step() {
 }
 
 ////////////////////////////////////////////////////////////////////
-std::string SQLiteDB::Text(int col) throw (std::string) {
+std::string SQLiteDB::Text(int col) {
 
 	// throw an exception if the requested column doesn't exist
 	checkColumn(SQLITE_TEXT, col);
@@ -206,7 +206,7 @@ std::string SQLiteDB::Text(int col) throw (std::string) {
 }
 
 ////////////////////////////////////////////////////////////////////
-int SQLiteDB::Integer(int col) throw (std::string) {
+int SQLiteDB::Integer(int col) {
 
 	// throw an exception if the requested column doesn't exist
 	checkColumn(SQLITE_INTEGER, col);
@@ -215,7 +215,7 @@ int SQLiteDB::Integer(int col) throw (std::string) {
 }
 
 ////////////////////////////////////////////////////////////////////
-double SQLiteDB::Float(int col) throw (std::string) {
+double SQLiteDB::Float(int col) {
 
 	// throw an exception if the requested column doesn't exist
 	checkColumn(SQLITE_FLOAT, col);
@@ -224,7 +224,7 @@ double SQLiteDB::Float(int col) throw (std::string) {
 }
 
 ////////////////////////////////////////////////////////////////////
-const void* SQLiteDB::Blob(int col, int& blobSize) throw (std::string) {
+const void* SQLiteDB::Blob(int col, int& blobSize) {
 
 	// throw an exception if the requested column doesn't exist
 	checkColumn(SQLITE_BLOB, col);
@@ -259,7 +259,7 @@ int SQLiteDB::colType(int col) {
 }
 
 ////////////////////////////////////////////////////////////////////
-void SQLiteDB::checkColumn(int colType, int col) throw (std::string) {
+void SQLiteDB::checkColumn(int colType, int col) {
 
 	if (col < 0 || col > _nColumns) {
 		std::stringstream s;
