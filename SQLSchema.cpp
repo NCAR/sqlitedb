@@ -10,7 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <regex>
+#include <boost/regex.hpp>
 
 //////////////////////////////////////////////////////////////////////////////
 SQLSchema::SQLSchema(std::string schemaOrPath, bool isFilePath) {
@@ -40,14 +40,15 @@ bool SQLSchema::user_version(int& user_version) {
 
 	// Regular expression to find  and decode the user_version pragma.
 	// ( Elements enclosed in parenthesis are returned in the results).
+	boost::regex pragma_re(".*pragma.*user_version.*=.*([0-9]+).*");
 
-    std::regex pragma_re("pragma.*user_version.*=.*([0-9]+)");
-    std::smatch results;
-    if(std::regex_search(_schema, results, pragma_re)){
-        std::stringstream(results[1]) >> user_version;
-        return true;
-    }
-    return false;
+	// Search for the pragma.
+	boost::match_results<std::string::const_iterator> results;
+	if (boost::regex_match(_schema, results, pragma_re)) {
+		std::stringstream(results[1]) >> user_version;
+		return true;
+	}
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////////

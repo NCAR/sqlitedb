@@ -15,7 +15,7 @@
 import os
 import sys
 
-tools = ['default', 'doxygen', 'prefixoptions']
+tools = ['default', 'doxygen', 'prefixoptions', 'boost_regex']
 env = Environment(tools = tools)
 thisdir = env.Dir('.').srcnode().abspath
 
@@ -28,6 +28,7 @@ def sqlitedb(env):
         # use the homebrew supplied sqlite on osx.
         env.AppendUnique(LIBPATH=['/usr/local/opt/sqlite/lib',])
         env.AppendUnique(CPPPATH=['/usr/local/opt/sqlite/include',])
+    env.Require(['boost_regex'])
 
 Export('sqlitedb')
 
