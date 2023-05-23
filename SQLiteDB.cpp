@@ -50,11 +50,15 @@ void SQLiteDB::init() {
 ////////////////////////////////////////////////////////////////////
 void SQLiteDB::close() {
 
-    // finalize the previously prepared statement
-	finalize();
-
 	// close the database
-	sqlite3_close(_dbHandle);
+	if (_dbHandle)
+	{
+		// finalize the previously prepared statement
+		finalize();
+
+		sqlite3_close(_dbHandle);
+		_dbHandle = 0;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////
